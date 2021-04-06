@@ -1,18 +1,31 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/bnuyts/go-binance-api/pkg/api"
 	"github.com/gorilla/mux"
 )
 
-func setup() {
-	router := mux.NewRouter().StrictSlash(true)
-	router.HandleFunc("/mcap/{symbol}", api.LastPrice)
+func help(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, "Try with /price/last/btcusdt")
+}
 
-	log.Fatal(http.ListenAndServe(":10000", router))
+func setup() {
+	port := os.Getenv("PORT")
+
+	if port == "" {
+		port = "10000"
+	}
+
+	router := mux.NewRouter().StrictSlash(true)
+	router.HandleFunc("/", help)
+	router.HandleFunc("/price/last/{symbol}", api.LastPrice)
+
+	log.Fatal(http.ListenAndServe(":"+port, router))
 }
 
 func main() {
