@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -11,7 +10,7 @@ import (
 )
 
 func help(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Try with /price/last/btcusdt")
+	http.ServeFile(w, r, "web/static/help.html")
 }
 
 func setup() {
